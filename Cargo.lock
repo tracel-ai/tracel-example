@@ -1002,6 +1002,7 @@ dependencies = [
  "burn-ir",
  "burn-wgpu",
  "bytemuck",
+ "cubecl",
  "derive-new",
  "half",
  "image",
