@@ -78,7 +78,8 @@ pub fn run(
     client: &ExperimentRun,
     Args(config): Args<MnistTrainingConfig>,
 ) -> Model<MnistModelArtifact> {
-    let device = FlexDevice.into();
+    let flex_device = FlexDevice.into();
+    let device = Device::autodiff(flex_device);
 
     let model = MnistModel::new(&device);
 
