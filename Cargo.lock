@@ -461,8 +461,8 @@ dependencies = [
  "burn-autodiff",
  "burn-core",
  "burn-cuda",
+ "burn-flex",
  "burn-ir",
- "burn-ndarray",
  "burn-nn",
  "burn-optim",
  "burn-std",
@@ -645,7 +645,6 @@ name = "burn-central-runtime"
 version = "0.6.0"
 dependencies = [
  "anyhow",
- "burn",
  "burn-central-artifact",
  "burn-central-client",
  "burn-central-core",
@@ -1001,6 +1000,7 @@ dependencies = [
  "burn-core",
  "burn-cubecl",
  "burn-cuda",
+ "burn-flex",
  "burn-fusion",
  "burn-ir",
  "burn-wgpu",

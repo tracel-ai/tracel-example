@@ -5,7 +5,6 @@ use crate::{
     model::{MnistModel, MnistModelArtifact},
 };
 
-use burn::optim::AdamWConfig;
 use burn::train::Learner;
 use burn::{
     data::{
@@ -31,10 +30,11 @@ use burn::{
         renderer::MetricsRenderer,
     },
 };
+use burn::{optim::AdamWConfig, tensor::FlexDevice};
 use burn_central::{
     experiment::{ArtifactKind, ExperimentRun, integration::training::ExperimentTrainingExt},
     macros::register,
-    runtime::{Args, Model, MultiDevice},
+    runtime::{Args, Model},
 };
 
 static ARTIFACT_DIR: &str = "/tmp/burn-example-mnist";
@@ -77,9 +77,8 @@ fn create_artifact_dir(artifact_dir: &str) {
 pub fn run(
     client: &ExperimentRun,
     Args(config): Args<MnistTrainingConfig>,
-    MultiDevice(devices): MultiDevice,
 ) -> Model<MnistModelArtifact> {
-    let device = devices.first().expect("No devices available").clone();
+    let device = FlexDevice.into();
 
     let model = MnistModel::new(&device);
 
