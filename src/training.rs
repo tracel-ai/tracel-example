@@ -208,13 +208,11 @@ fn train(
         .with_metric_logger(experiment.metric_logger())
         .with_interrupter(experiment.interrupter());
 
-    let result = training.launch(Learner::new(
+    training.launch(Learner::new(
         model,
         config.optimizer.init(),
         lr_scheduler.init().unwrap(),
-    ));
-
-    result
+    ))
 }
 
 fn evaluate(
