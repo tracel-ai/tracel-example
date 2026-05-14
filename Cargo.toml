@@ -23,8 +23,3 @@ serde_json = "1"
 serde = { version = "1.0.228", features = ["std", "derive"] }
 ctrlc = "3.5.2"
 tracing = "0.1.44"
-
-[features]
-default = []
-cuda = ["burn/cuda"]
-wgpu = ["burn/wgpu"]

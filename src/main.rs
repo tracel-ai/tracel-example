@@ -9,7 +9,6 @@ use burn_central_example::training::MnistTrainingConfig;
 
 fn main() {
     try_init_tracing_subscriber();
-
     let device = Device::default();
 
     let exp_dir = "./experiments";
