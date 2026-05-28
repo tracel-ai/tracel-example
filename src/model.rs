@@ -9,7 +9,7 @@ use burn::{
     record::{FullPrecisionSettings, NamedMpkBytesRecorder, Recorder},
     train::{ClassificationOutput, InferenceStep, TrainOutput, TrainStep},
 };
-use burn_central::artifact::bundle::{BundleDecode, BundleEncode, BundleSink, BundleSource};
+use tracel::artifact::bundle::{BundleDecode, BundleEncode, BundleSink, BundleSource};
 
 #[derive(Module, Debug)]
 pub struct MnistModel {

@@ -4,7 +4,7 @@ edition = "2024"
 version = "0.1.0"
 
 [dependencies]
-burn = { git = "https://github.com/tracel-ai/burn", rev = "924d5d9ee9f87c411a103e1178a9baeb3e6c3f1a", features = [
+burn = { git = "https://github.com/tracel-ai/burn", rev = "1b6dd60361115a0efb5b67c43cb75cd856b30498", features = [
     "train",
     "vision",
     "metrics",
@@ -14,7 +14,7 @@ burn = { git = "https://github.com/tracel-ai/burn", rev = "924d5d9ee9f87c411a103
     "autotune",
     "optim",
 ], default-features = false }
-burn-central = "0.6.0"
+tracel = { git = "https://github.com/tracel-ai/burn-central", rev = "1b6dd60361115a0efb5b67c43cb75cd856b30498", package = "burn-central" }
 
 # Serialization
 log = "0.4.29"

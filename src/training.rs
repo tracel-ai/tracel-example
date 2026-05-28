@@ -6,6 +6,7 @@ use crate::{
 };
 
 use burn::train::Learner;
+use burn::{backend::FlexDevice, optim::AdamWConfig};
 use burn::{
     data::{
         dataloader::DataLoaderBuilder,
@@ -30,8 +31,7 @@ use burn::{
         renderer::MetricsRenderer,
     },
 };
-use burn::{optim::AdamWConfig, tensor::FlexDevice};
-use burn_central::{
+use tracel::{
     experiment::{ArtifactKind, ExperimentRun, integration::training::ExperimentTrainingExt},
     macros::register,
     runtime::{Args, Model},
