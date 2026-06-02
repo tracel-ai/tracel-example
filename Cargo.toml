@@ -14,7 +14,8 @@ burn = { git = "https://github.com/tracel-ai/burn", rev = "1b6dd60361115a0efb5b6
     "autotune",
     "optim",
 ], default-features = false }
-tracel = { git = "https://github.com/tracel-ai/burn-central", rev = "1b6dd60361115a0efb5b67c43cb75cd856b30498", package = "burn-central" }
+tracel = { path = "../sdk/crates/tracel", package = "burn-central" }
+tracel-cloud = { path = "../sdk/crates/tracel-cloud" }
 
 # Serialization
 log = "0.4.29"
@@ -23,3 +24,4 @@ serde_json = "1"
 serde = { version = "1.0.228", features = ["std", "derive"] }
 ctrlc = "3.5.2"
 tracing = "0.1.44"
+dotenvy = "0.15"

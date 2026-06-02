@@ -33,8 +33,7 @@ use burn::{
 };
 use tracel::{
     experiment::{ArtifactKind, ExperimentRun, integration::training::ExperimentTrainingExt},
-    macros::register,
-    runtime::{Args, Model},
+    runtime::Model,
 };
 
 static ARTIFACT_DIR: &str = "/tmp/burn-example-mnist";
@@ -73,11 +72,7 @@ fn create_artifact_dir(artifact_dir: &str) {
     std::fs::create_dir_all(artifact_dir).ok();
 }
 
-#[register(training, name = "train_mnist")]
-pub fn run(
-    client: &ExperimentRun,
-    Args(config): Args<MnistTrainingConfig>,
-) -> Model<MnistModelArtifact> {
+pub fn run(client: &ExperimentRun, config: MnistTrainingConfig) -> Model<MnistModelArtifact> {
     let flex_device = FlexDevice.into();
     let device = Device::autodiff(flex_device);
 
