@@ -4,7 +4,7 @@ use burn::backend::FlexDevice;
 use burn::tensor::Device;
 use burn_central_example::training::{self, MnistTrainingConfig};
 use tracel::{Env, experiment::ExperimentRun};
-use tracel_cloud::CloudContext;
+use tracel_cloud::Context;
 
 fn main() {
     dotenvy::dotenv().ok();
@@ -26,18 +26,18 @@ fn main() {
     // }
 
     let my_config = MnistTrainingConfig::default();
-    let ctx = CloudContext::discover(Env::Development).unwrap_or_else(|e| {
+
+    let ctx = Context::cloud(Env::Development).unwrap_or_else(|e| {
         eprintln!("[tracel] error: {e}");
         std::process::exit(1);
     });
-
-    let experiment_job = ctx.experiment(|experiment, config: MnistTrainingConfig| {
+    let experiment_module = ctx.experiment();
+    let experiment_job = experiment_module.create(|experiment, config: MnistTrainingConfig| {
         let my_devices = vec![Device::autodiff(FlexDevice.into())];
         install_ctrlc(&experiment);
 
         training::run_manual(experiment, config, my_devices)
     });
-
     experiment_job.run(my_config).unwrap();
 }
 
