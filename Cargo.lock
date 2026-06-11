@@ -497,19 +497,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "burn-central"
-version = "0.6.0"
-dependencies = [
- "burn-central-client",
- "tracel-artifact",
- "tracel-experiment",
- "tracel-fleet",
- "tracel-inference",
- "tracel-macros",
- "tracel-runtime",
-]
-
-[[package]]
 name = "burn-central-client"
 version = "0.7.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -530,15 +517,15 @@ dependencies = [
 name = "burn-central-example"
 version = "0.1.0"
 dependencies = [
+ "anyhow",
  "burn",
- "burn-central",
  "ctrlc",
  "dotenvy",
  "log",
  "rand 0.9.4",
  "serde",
  "serde_json",
- "tracel-cloud",
+ "tracel",
  "tracing",
 ]
 
@@ -6113,6 +6100,20 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "8df9b6e13f2d32c91b9bd719c00d1958837bc7dec474d94952798cc8e69eeec3"
 
 [[package]]
+name = "tracel"
+version = "0.6.0"
+dependencies = [
+ "burn-central-client",
+ "tracel-artifact",
+ "tracel-core",
+ "tracel-experiment",
+ "tracel-fleet",
+ "tracel-inference",
+ "tracel-macros",
+ "tracel-runtime",
+]
+
+[[package]]
 name = "tracel-artifact"
 version = "0.6.0"
 dependencies = [
@@ -6124,18 +6125,21 @@ dependencies = [
 ]
 
 [[package]]
-name = "tracel-cloud"
+name = "tracel-core"
 version = "0.6.0"
 dependencies = [
  "burn-central-client",
- "ctrlc",
+ "crossbeam",
  "directories",
  "serde",
  "serde_json",
+ "sha2",
  "thiserror 2.0.18",
  "toml",
+ "tracel-artifact",
  "tracel-experiment",
- "tracel-macros",
+ "tracing",
+ "url",
 ]
 
 [[package]]
@@ -6143,11 +6147,9 @@ name = "tracel-experiment"
 version = "0.6.0"
 dependencies = [
  "burn",
- "burn-central-client",
- "crossbeam",
+ "ctrlc",
  "serde",
  "serde_json",
- "sha2",
  "thiserror 2.0.18",
  "tracel-artifact",
  "tracing",
@@ -6276,6 +6278,7 @@ dependencies = [
  "syn",
  "thiserror 2.0.18",
  "tracel-artifact",
+ "tracel-core",
  "tracel-experiment",
  "tracel-fleet",
  "tracel-inference",

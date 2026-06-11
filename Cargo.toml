@@ -14,10 +14,10 @@ burn = { git = "https://github.com/tracel-ai/burn", rev = "1b6dd60361115a0efb5b6
     "autotune",
     "optim",
 ], default-features = false }
-tracel = { path = "../sdk/crates/tracel", package = "burn-central" }
-tracel-cloud = { path = "../sdk/crates/tracel-cloud" }
+tracel = { path = "../sdk/crates/tracel", package = "tracel" }
 
 # Serialization
+anyhow = "1.0.71"
 log = "0.4.29"
 rand = "0.9.2"
 serde_json = "1"
