@@ -25,3 +25,7 @@ serde = { version = "1.0.228", features = ["std", "derive"] }
 ctrlc = "3.5.2"
 tracing = "0.1.44"
 dotenvy = "0.15"
+
+[features]
+wgpu = ["burn/wgpu"]
+cuda = ["burn/cuda"]
