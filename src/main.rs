@@ -6,7 +6,6 @@ use burn_central_example::training::{self, MnistTrainingConfig};
 use tracel::{Context, experiment::ExperimentRun};
 
 fn main() -> anyhow::Result<()> {
-    // dotenvy::dotenv().ok();
     Context::cloud()?
         .experiment()
         .create("MNIST_Training", |session: &ExperimentRun, config| {
