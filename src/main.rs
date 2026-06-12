@@ -10,7 +10,7 @@ fn main() -> anyhow::Result<()> {
         .experiment()
         .create("MNIST_Training", |session: &ExperimentRun, config| {
             training::run(session, config, vec![Device::autodiff(FlexDevice.into())])
-        })?
+        })
         .run(MnistTrainingConfig::default())
         .map_err(anyhow::Error::from_boxed)?;
 

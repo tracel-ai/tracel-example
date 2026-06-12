@@ -6106,7 +6106,7 @@ checksum = "8df9b6e13f2d32c91b9bd719c00d1958837bc7dec474d94952798cc8e69eeec3"
 [[package]]
 name = "tracel"
 version = "0.6.0"
-source = "git+https://github.com/tracel-ai/burn-central?rev=c677b98296bf045fc82470629c33bfe13781d247#c677b98296bf045fc82470629c33bfe13781d247"
+source = "git+https://github.com/tracel-ai/burn-central?rev=15cca8f0b2fbff181bacca50323b3c233d6d51ae#15cca8f0b2fbff181bacca50323b3c233d6d51ae"
 dependencies = [
  "burn-central-client",
  "tracel-artifact",
@@ -6121,7 +6121,7 @@ dependencies = [
 [[package]]
 name = "tracel-artifact"
 version = "0.6.0"
-source = "git+https://github.com/tracel-ai/burn-central?rev=c677b98296bf045fc82470629c33bfe13781d247#c677b98296bf045fc82470629c33bfe13781d247"
+source = "git+https://github.com/tracel-ai/burn-central?rev=15cca8f0b2fbff181bacca50323b3c233d6d51ae#15cca8f0b2fbff181bacca50323b3c233d6d51ae"
 dependencies = [
  "reqwest 0.13.3",
  "serde",
@@ -6133,7 +6133,7 @@ dependencies = [
 [[package]]
 name = "tracel-core"
 version = "0.6.0"
-source = "git+https://github.com/tracel-ai/burn-central?rev=c677b98296bf045fc82470629c33bfe13781d247#c677b98296bf045fc82470629c33bfe13781d247"
+source = "git+https://github.com/tracel-ai/burn-central?rev=15cca8f0b2fbff181bacca50323b3c233d6d51ae#15cca8f0b2fbff181bacca50323b3c233d6d51ae"
 dependencies = [
  "burn-central-client",
  "crossbeam",
@@ -6152,10 +6152,9 @@ dependencies = [
 [[package]]
 name = "tracel-experiment"
 version = "0.6.0"
-source = "git+https://github.com/tracel-ai/burn-central?rev=c677b98296bf045fc82470629c33bfe13781d247#c677b98296bf045fc82470629c33bfe13781d247"
+source = "git+https://github.com/tracel-ai/burn-central?rev=15cca8f0b2fbff181bacca50323b3c233d6d51ae#15cca8f0b2fbff181bacca50323b3c233d6d51ae"
 dependencies = [
  "burn",
- "ctrlc",
  "serde",
  "serde_json",
  "thiserror 2.0.18",
@@ -6167,7 +6166,7 @@ dependencies = [
 [[package]]
 name = "tracel-fleet"
 version = "0.6.0"
-source = "git+https://github.com/tracel-ai/burn-central?rev=c677b98296bf045fc82470629c33bfe13781d247#c677b98296bf045fc82470629c33bfe13781d247"
+source = "git+https://github.com/tracel-ai/burn-central?rev=15cca8f0b2fbff181bacca50323b3c233d6d51ae#15cca8f0b2fbff181bacca50323b3c233d6d51ae"
 dependencies = [
  "arc-swap",
  "burn-central-client",
@@ -6192,7 +6191,7 @@ dependencies = [
 [[package]]
 name = "tracel-inference"
 version = "0.6.0"
-source = "git+https://github.com/tracel-ai/burn-central?rev=c677b98296bf045fc82470629c33bfe13781d247#c677b98296bf045fc82470629c33bfe13781d247"
+source = "git+https://github.com/tracel-ai/burn-central?rev=15cca8f0b2fbff181bacca50323b3c233d6d51ae#15cca8f0b2fbff181bacca50323b3c233d6d51ae"
 dependencies = [
  "crossbeam",
  "serde",
@@ -6231,7 +6230,7 @@ dependencies = [
 [[package]]
 name = "tracel-macros"
 version = "0.6.0"
-source = "git+https://github.com/tracel-ai/burn-central?rev=c677b98296bf045fc82470629c33bfe13781d247#c677b98296bf045fc82470629c33bfe13781d247"
+source = "git+https://github.com/tracel-ai/burn-central?rev=15cca8f0b2fbff181bacca50323b3c233d6d51ae#15cca8f0b2fbff181bacca50323b3c233d6d51ae"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -6276,7 +6275,7 @@ dependencies = [
 [[package]]
 name = "tracel-runtime"
 version = "0.6.0"
-source = "git+https://github.com/tracel-ai/burn-central?rev=c677b98296bf045fc82470629c33bfe13781d247#c677b98296bf045fc82470629c33bfe13781d247"
+source = "git+https://github.com/tracel-ai/burn-central?rev=15cca8f0b2fbff181bacca50323b3c233d6d51ae#15cca8f0b2fbff181bacca50323b3c233d6d51ae"
 dependencies = [
  "anyhow",
  "burn-central-client",

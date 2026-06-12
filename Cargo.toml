@@ -14,7 +14,7 @@ burn = { git = "https://github.com/tracel-ai/burn", rev = "1b6dd60361115a0efb5b6
     "autotune",
     "optim",
 ], default-features = false }
-tracel = { git = "https://github.com/tracel-ai/burn-central", rev = "c677b98296bf045fc82470629c33bfe13781d247", package = "tracel" }
+tracel = { git = "https://github.com/tracel-ai/burn-central", rev = "15cca8f0b2fbff181bacca50323b3c233d6d51ae", package = "tracel" }
 
 # Serialization
 anyhow = "1.0.71"
