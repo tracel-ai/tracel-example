@@ -5,6 +5,7 @@ use crate::{
     model::{MnistModel, MnistModelArtifact},
 };
 
+use burn::train::Learner;
 use burn::{
     data::{
         dataloader::DataLoaderBuilder,
@@ -19,7 +20,6 @@ use burn::{
         linear::LinearLrSchedulerConfig,
     },
     prelude::*,
-    tensor::backend::AutodiffBackend,
     train::{
         EvaluatorBuilder, LearningResult, MetricEarlyStoppingStrategy, StoppingCondition,
         SupervisedTraining,
@@ -30,11 +30,11 @@ use burn::{
         renderer::MetricsRenderer,
     },
 };
-use burn::{optim::AdamWConfig, train::Learner};
+use burn::{optim::AdamWConfig, tensor::FlexDevice};
 use burn_central::{
     experiment::{ArtifactKind, ExperimentRun, integration::training::ExperimentTrainingExt},
     macros::register,
-    runtime::{Args, Model, MultiDevice},
+    runtime::{Args, Model},
 };
 
 static ARTIFACT_DIR: &str = "/tmp/burn-example-mnist";
@@ -74,18 +74,17 @@ fn create_artifact_dir(artifact_dir: &str) {
 }
 
 #[register(training, name = "train_mnist")]
-pub fn run<B: AutodiffBackend>(
+pub fn run(
     client: &ExperimentRun,
     Args(config): Args<MnistTrainingConfig>,
-    MultiDevice(devices): MultiDevice<B>,
-) -> Model<MnistModelArtifact<B::InnerBackend>> {
-    let device = devices.first().expect("No devices available").clone();
-    B::seed(&device, config.seed);
+) -> Model<MnistModelArtifact> {
+    let flex_device = FlexDevice.into();
+    let device = Device::autodiff(flex_device);
 
-    let model = MnistModel::<B>::new(&device);
+    let model = MnistModel::new(&device);
 
     // Training phase
-    let result = train::<B>(model, &config, client);
+    let result = train(model, &config, client);
 
     // Evaluation phase
     let dataset_test_plain = Arc::new(MnistDataset::test());
@@ -95,7 +94,7 @@ pub fn run<B: AutodiffBackend>(
 
     for (ident, _) in idents_tests {
         let name = ident.to_string();
-        renderer = evaluate::<B::InnerBackend>(
+        renderer = evaluate(
             name.as_str(),
             ident,
             result.model.clone(),
@@ -114,20 +113,19 @@ pub fn run<B: AutodiffBackend>(
     })
 }
 
-pub fn run_manual<B: AutodiffBackend>(
+pub fn run_manual(
     experiment: &ExperimentRun,
     config: MnistTrainingConfig,
-    devices: Vec<B::Device>,
+    devices: Vec<Device>,
 ) -> Result<(), Box<dyn std::error::Error>> {
     experiment.log_args(&config)?;
 
     let device = devices.first().expect("No devices available").clone();
-    B::seed(&device, config.seed);
 
-    let model = MnistModel::<B>::new(&device);
+    let model = MnistModel::new(&device);
 
     // Training phase
-    let result = train::<B>(model, &config, experiment);
+    let result = train(model, &config, experiment);
 
     // Evaluation phase
     let dataset_test_plain = Arc::new(MnistDataset::test());
@@ -137,7 +135,7 @@ pub fn run_manual<B: AutodiffBackend>(
 
     for (ident, _) in idents_tests {
         let name = ident.to_string();
-        renderer = evaluate::<B::InnerBackend>(
+        renderer = evaluate(
             name.as_str(),
             ident,
             result.model.clone(),
@@ -159,11 +157,11 @@ pub fn run_manual<B: AutodiffBackend>(
     Ok(())
 }
 
-fn train<B: AutodiffBackend>(
-    model: MnistModel<B>,
+fn train(
+    model: MnistModel,
     config: &MnistTrainingConfig,
     experiment: &ExperimentRun,
-) -> LearningResult<MnistModel<B::InnerBackend>> {
+) -> LearningResult<MnistModel> {
     create_artifact_dir(ARTIFACT_DIR);
 
     let dataset_train_original = Arc::new(MnistDataset::train());
@@ -195,7 +193,7 @@ fn train<B: AutodiffBackend>(
         .metrics((AccuracyMetric::new(), LossMetric::new()))
         .metric_train_numeric(LearningRateMetric::new())
         .early_stopping(MetricEarlyStoppingStrategy::new(
-            &LossMetric::<B>::new(),
+            &LossMetric::new(),
             Aggregate::Mean,
             Direction::Lowest,
             Split::Valid,
@@ -210,19 +208,17 @@ fn train<B: AutodiffBackend>(
         .with_metric_logger(experiment.metric_logger())
         .with_interrupter(experiment.interrupter());
 
-    let result = training.launch(Learner::new(
+    training.launch(Learner::new(
         model,
         config.optimizer.init(),
         lr_scheduler.init().unwrap(),
-    ));
-
-    result
+    ))
 }
 
-fn evaluate<B: Backend>(
+fn evaluate(
     name: &str,
     ident: DatasetIdent,
-    model: MnistModel<B>,
+    model: MnistModel,
     renderer: Box<dyn MetricsRenderer>,
     dataset: impl Dataset<MnistItem> + 'static,
     batch_size: usize,

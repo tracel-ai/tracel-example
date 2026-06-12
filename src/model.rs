@@ -7,33 +7,32 @@ use burn::{
     },
     prelude::*,
     record::{FullPrecisionSettings, NamedMpkBytesRecorder, Recorder},
-    tensor::backend::AutodiffBackend,
     train::{ClassificationOutput, InferenceStep, TrainOutput, TrainStep},
 };
 use burn_central::artifact::bundle::{BundleDecode, BundleEncode, BundleSink, BundleSource};
 
 #[derive(Module, Debug)]
-pub struct MnistModel<B: Backend> {
-    conv1: ConvBlock<B>,
-    conv2: ConvBlock<B>,
+pub struct MnistModel {
+    conv1: ConvBlock,
+    conv2: ConvBlock,
     dropout: nn::Dropout,
-    fc1: nn::Linear<B>,
-    fc2: nn::Linear<B>,
-    fc3: nn::Linear<B>,
+    fc1: nn::Linear,
+    fc2: nn::Linear,
+    fc3: nn::Linear,
     activation: nn::Gelu,
 }
 
-impl<B: Backend> Default for MnistModel<B> {
+impl Default for MnistModel {
     fn default() -> Self {
-        let device = B::Device::default();
+        let device = Device::default();
         Self::new(&device)
     }
 }
 
 const NUM_CLASSES: usize = 10;
 
-impl<B: Backend> MnistModel<B> {
-    pub fn new(device: &B::Device) -> Self {
+impl MnistModel {
+    pub fn new(device: &Device) -> Self {
         let conv1 = ConvBlock::new([1, 64], [3, 3], device, true); // out: max_pool -> [Batch,32,13,13]
         let conv2 = ConvBlock::new([64, 64], [3, 3], device, true); // out: max_pool -> [Batch,64,5,5]
         let hidden_size = 64 * 5 * 5;
@@ -54,7 +53,7 @@ impl<B: Backend> MnistModel<B> {
         }
     }
 
-    pub fn forward(&self, input: Tensor<B, 3>) -> Tensor<B, 2> {
+    pub fn forward(&self, input: Tensor<3>) -> Tensor<2> {
         let [batch_size, height, width] = input.dims();
 
         let x = input.reshape([batch_size, 1, height, width]).detach();
@@ -75,7 +74,7 @@ impl<B: Backend> MnistModel<B> {
         self.fc3.forward(x)
     }
 
-    pub fn forward_classification(&self, item: MnistBatch<B>) -> ClassificationOutput<B> {
+    pub fn forward_classification(&self, item: MnistBatch) -> ClassificationOutput {
         let targets = item.targets;
         let output = self.forward(item.images);
         let loss = CrossEntropyLossConfig::new()
@@ -91,20 +90,15 @@ impl<B: Backend> MnistModel<B> {
 }
 
 #[derive(Module, Debug)]
-pub struct ConvBlock<B: Backend> {
-    conv: nn::conv::Conv2d<B>,
-    norm: BatchNorm<B>,
+pub struct ConvBlock {
+    conv: nn::conv::Conv2d,
+    norm: BatchNorm,
     pool: Option<MaxPool2d>,
     activation: nn::Relu,
 }
 
-impl<B: Backend> ConvBlock<B> {
-    pub fn new(
-        channels: [usize; 2],
-        kernel_size: [usize; 2],
-        device: &B::Device,
-        pool: bool,
-    ) -> Self {
+impl ConvBlock {
+    pub fn new(channels: [usize; 2], kernel_size: [usize; 2], device: &Device, pool: bool) -> Self {
         let conv = nn::conv::Conv2dConfig::new(channels, kernel_size)
             .with_padding(PaddingConfig2d::Valid)
             .init(device);
@@ -123,7 +117,7 @@ impl<B: Backend> ConvBlock<B> {
         }
     }
 
-    pub fn forward(&self, input: Tensor<B, 4>) -> Tensor<B, 4> {
+    pub fn forward(&self, input: Tensor<4>) -> Tensor<4> {
         let x = self.conv.forward(input);
         let x = self.norm.forward(x);
         let x = self.activation.forward(x);
@@ -136,33 +130,33 @@ impl<B: Backend> ConvBlock<B> {
     }
 }
 
-impl<B: AutodiffBackend> TrainStep for MnistModel<B> {
-    type Input = MnistBatch<B>;
-    type Output = ClassificationOutput<B>;
+impl TrainStep for MnistModel {
+    type Input = MnistBatch;
+    type Output = ClassificationOutput;
 
-    fn step(&self, item: MnistBatch<B>) -> TrainOutput<ClassificationOutput<B>> {
+    fn step(&self, item: MnistBatch) -> TrainOutput<ClassificationOutput> {
         let item = self.forward_classification(item);
 
         TrainOutput::new(self, item.loss.backward(), item)
     }
 }
 
-impl<B: Backend> InferenceStep for MnistModel<B> {
-    type Input = MnistBatch<B>;
-    type Output = ClassificationOutput<B>;
+impl InferenceStep for MnistModel {
+    type Input = MnistBatch;
+    type Output = ClassificationOutput;
 
-    fn step(&self, item: MnistBatch<B>) -> ClassificationOutput<B> {
+    fn step(&self, item: MnistBatch) -> ClassificationOutput {
         self.forward_classification(item)
     }
 }
 
 // Define the model artifact (put in that everything you will need for inference)
-pub struct MnistModelArtifact<B: Backend> {
-    pub model_record: MnistModelRecord<B>,
+pub struct MnistModelArtifact {
+    pub model_record: MnistModelRecord,
     pub config: MnistTrainingConfig,
 }
 
-impl<B: Backend> BundleEncode for MnistModelArtifact<B> {
+impl BundleEncode for MnistModelArtifact {
     type Settings = ();
     type Error = String;
 
@@ -188,7 +182,7 @@ impl<B: Backend> BundleEncode for MnistModelArtifact<B> {
     }
 }
 
-impl<B: Backend> BundleDecode for MnistModelArtifact<B> {
+impl BundleDecode for MnistModelArtifact {
     type Settings = ();
     type Error = String;
 
@@ -213,7 +207,7 @@ impl<B: Backend> BundleDecode for MnistModelArtifact<B> {
 
         let recorder = NamedMpkBytesRecorder::<FullPrecisionSettings>::default();
         let (model_record, ()) = recorder
-            .load(model_bytes, &B::Device::default())
+            .load(model_bytes, &Device::default())
             .map_err(|e| format!("Failed to read model: {e}"))?;
 
         Ok(MnistModelArtifact {

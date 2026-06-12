@@ -4,14 +4,15 @@ edition = "2024"
 version = "0.1.0"
 
 [dependencies]
-burn = { version = "0.20.0", features = [
+burn = { git = "https://github.com/tracel-ai/burn", rev = "924d5d9ee9f87c411a103e1178a9baeb3e6c3f1a", features = [
     "train",
     "vision",
     "metrics",
     "std",
     "fusion",
-    "ndarray",
+    "flex",
     "autotune",
+    "optim",
 ], default-features = false }
 burn-central = "0.6.0"
 
@@ -22,8 +23,3 @@ serde_json = "1"
 serde = { version = "1.0.228", features = ["std", "derive"] }
 ctrlc = "3.5.2"
 tracing = "0.1.44"
-
-[features]
-default = []
-cuda = ["burn/cuda"]
-wgpu = ["burn/wgpu"]
