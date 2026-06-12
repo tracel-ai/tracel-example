@@ -79,6 +79,7 @@ pub fn run(
     experiment.log_args(&config)?;
 
     let device = devices.first().expect("No devices available").clone();
+    device.seed(config.seed);
 
     let model = MnistModel::new(&device);
 
