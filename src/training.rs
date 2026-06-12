@@ -5,6 +5,7 @@ use crate::{
     model::{MnistModel, MnistModelArtifact},
 };
 
+use burn::optim::AdamWConfig;
 use burn::train::Learner;
 use burn::{
     data::{
@@ -30,11 +31,8 @@ use burn::{
         renderer::MetricsRenderer,
     },
 };
-use burn::{optim::AdamWConfig, tensor::FlexDevice};
-use burn_central::{
-    experiment::{ArtifactKind, ExperimentRun, integration::training::ExperimentTrainingExt},
-    macros::register,
-    runtime::{Args, Model},
+use tracel::experiment::{
+    ArtifactKind, ExperimentRun, integration::training::ExperimentTrainingExt,
 };
 
 static ARTIFACT_DIR: &str = "/tmp/burn-example-mnist";
@@ -73,54 +71,15 @@ fn create_artifact_dir(artifact_dir: &str) {
     std::fs::create_dir_all(artifact_dir).ok();
 }
 
-#[register(training, name = "train_mnist")]
 pub fn run(
-    client: &ExperimentRun,
-    Args(config): Args<MnistTrainingConfig>,
-) -> Model<MnistModelArtifact> {
-    let flex_device = FlexDevice.into();
-    let device = Device::autodiff(flex_device);
-
-    let model = MnistModel::new(&device);
-
-    // Training phase
-    let result = train(model, &config, client);
-
-    // Evaluation phase
-    let dataset_test_plain = Arc::new(MnistDataset::test());
-    let mut renderer = result.renderer;
-
-    let idents_tests = generate_idents(None);
-
-    for (ident, _) in idents_tests {
-        let name = ident.to_string();
-        renderer = evaluate(
-            name.as_str(),
-            ident,
-            result.model.clone(),
-            renderer,
-            dataset_test_plain.clone(),
-            config.batch_size,
-        );
-    }
-
-    renderer.manual_close();
-
-    // Return wrapper to burn-central
-    Model(MnistModelArtifact {
-        model_record: result.model.into_record(),
-        config,
-    })
-}
-
-pub fn run_manual(
     experiment: &ExperimentRun,
     config: MnistTrainingConfig,
     devices: Vec<Device>,
-) -> Result<(), Box<dyn std::error::Error>> {
+) -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
     experiment.log_args(&config)?;
 
     let device = devices.first().expect("No devices available").clone();
+    device.seed(config.seed);
 
     let model = MnistModel::new(&device);
 
