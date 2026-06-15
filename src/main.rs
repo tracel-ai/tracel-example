@@ -3,10 +3,10 @@
 use burn::backend::FlexDevice;
 use burn::tensor::Device;
 use burn_central_example::training::{self, MnistTrainingConfig};
-use tracel::{Context, experiment::ExperimentRun};
+use tracel::{Connection, Context, experiment::ExperimentRun};
 
 fn main() -> anyhow::Result<()> {
-    Context::cloud()?
+    Context::new(Connection::Cloud)?
         .experiment()
         .create("MNIST_Training", |session: &ExperimentRun, config| {
             training::run(session, config, vec![Device::autodiff(FlexDevice.into())])
