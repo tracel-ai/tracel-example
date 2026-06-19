@@ -162,8 +162,9 @@ fn train(
         .summary();
 
     // Configure the training integrations from burn-central
+    let (model_ckpt, optim_ckpt, scheduler_ckpt) = experiment.checkpointers();
     training = training
-        .with_default_checkpointers()
+        .with_custom_checkpointers(model_ckpt, optim_ckpt, scheduler_ckpt)
         .with_metric_logger(experiment.metric_logger())
         .with_interrupter(experiment.interrupter());
 
