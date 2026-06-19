@@ -163,7 +163,7 @@ fn train(
 
     // Configure the training integrations from burn-central
     training = training
-        .with_checkpointer()
+        .with_default_checkpointers()
         .with_metric_logger(experiment.metric_logger())
         .with_interrupter(experiment.interrupter());
 
