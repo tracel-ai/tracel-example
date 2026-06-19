@@ -27,5 +27,7 @@ tracing = "0.1.44"
 dotenvy = "0.15"
 
 [features]
+default = ["wgpu", "flex"]
+flex = ["burn/flex"]
 wgpu = ["burn/wgpu"]
 cuda = ["burn/cuda"]

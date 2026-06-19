@@ -1,7 +1,9 @@
 #![recursion_limit = "256"]
 
-use burn::backend::FlexDevice;
-use burn::tensor::Device;
+use burn::{
+    backend::{FlexDevice, WgpuDevice},
+    tensor::Device,
+};
 use burn_central_example::training::{self, MnistTrainingConfig};
 use tracel::{Connection, Context, experiment::ExperimentRun};
 
