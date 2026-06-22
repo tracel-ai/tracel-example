@@ -6127,7 +6127,6 @@ name = "tracel"
 version = "0.6.0"
 dependencies = [
  "tracel-artifact",
- "tracel-cli",
  "tracel-client",
  "tracel-core",
  "tracel-experiment",
@@ -6146,17 +6145,6 @@ dependencies = [
  "sha2",
  "tempfile",
  "thiserror 2.0.18",
-]
-
-[[package]]
-name = "tracel-cli"
-version = "0.6.0"
-dependencies = [
- "clap",
- "json-patch",
- "serde",
- "serde_json",
- "tracel-experiment",
 ]
 
 [[package]]
