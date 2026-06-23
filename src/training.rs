@@ -40,7 +40,7 @@ const A_EPOCH_CHECKPOINT: usize = 1;
 static ARTIFACT_DIR: &str = "/tmp/burn-example-mnist";
 #[derive(Config, Debug)]
 pub struct MnistTrainingConfig {
-    #[config(default = 5)]
+    #[config(default = 20)]
     pub num_epochs: usize,
 
     #[config(default = 256)]
