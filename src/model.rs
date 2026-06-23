@@ -191,8 +191,6 @@ impl BundleDecode for MnistModelArtifact {
         source: &I,
         _settings: &Self::Settings,
     ) -> Result<Self, Self::Error> {
-        // TODO simplify this method with the new ModuleRecord methods
-
         let config_reader = source
             .open("config.json")
             .map_err(|e| format!("Failed to read config: {e}"))?;
