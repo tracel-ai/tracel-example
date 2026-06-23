@@ -4,7 +4,7 @@ edition = "2024"
 version = "0.1.0"
 
 [dependencies]
-burn = { git = "https://github.com/tracel-ai/burn", rev = "44605a412c0dd1b17b31ecb890cf1d3d474e5516", features = [
+burn = { git = "https://github.com/tracel-ai/burn", rev = "35ff68bd3b2faa6b6f651e5d7ab5939b4504f799", features = [
     "train",
     "vision",
     "metrics",
@@ -27,7 +27,7 @@ tracing = "0.1.44"
 dotenvy = "0.15"
 
 [features]
-default = ["wgpu", "flex"]
+default = ["wgpu"]
 flex = ["burn/flex"]
 wgpu = ["burn/wgpu"]
 cuda = ["burn/cuda"]
