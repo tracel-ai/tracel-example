@@ -4,7 +4,7 @@ edition = "2024"
 version = "0.1.0"
 
 [dependencies]
-burn = { git = "https://github.com/tracel-ai/burn", rev = "1b6dd60361115a0efb5b67c43cb75cd856b30498", features = [
+burn = { git = "https://github.com/tracel-ai/burn", rev = "35ff68bd3b2faa6b6f651e5d7ab5939b4504f799", features = [
     "train",
     "vision",
     "metrics",
@@ -14,7 +14,7 @@ burn = { git = "https://github.com/tracel-ai/burn", rev = "1b6dd60361115a0efb5b6
     "autotune",
     "optim",
 ], default-features = false }
-tracel = { git = "https://github.com/tracel-ai/burn-central", rev = "c5b8824d69100578583a3b8dca816f738488f6d5", package = "tracel" }
+tracel = { git = "https://github.com/tracel-ai/burn-central", rev = "cd7034e9f6426847d54b24ad9f88326ffde4fdd9", package = "tracel" }
 
 # Serialization
 anyhow = "1.0.71"
@@ -27,5 +27,7 @@ tracing = "0.1.44"
 dotenvy = "0.15"
 
 [features]
+default = ["wgpu"]
+flex = ["burn/flex"]
 wgpu = ["burn/wgpu"]
 cuda = ["burn/cuda"]

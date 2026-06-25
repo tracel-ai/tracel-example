@@ -6,7 +6,8 @@ use burn::{
         pool::{MaxPool2d, MaxPool2dConfig},
     },
     prelude::*,
-    record::{FullPrecisionSettings, NamedMpkBytesRecorder, Recorder},
+    store::ModuleRecord,
+    tensor::Bytes,
     train::{ClassificationOutput, InferenceStep, TrainOutput, TrainStep},
 };
 use tracel::artifact::bundle::{BundleDecode, BundleEncode, BundleSink, BundleSource};
@@ -152,7 +153,7 @@ impl InferenceStep for MnistModel {
 
 // Define the model artifact (put in that everything you will need for inference)
 pub struct MnistModelArtifact {
-    pub model_record: MnistModelRecord,
+    pub model_record: ModuleRecord,
     pub config: MnistTrainingConfig,
 }
 
@@ -170,9 +171,9 @@ impl BundleEncode for MnistModelArtifact {
         sink.put_bytes("config.json", &config_bytes)
             .map_err(|e| format!("Failed to write config: {e}"))?;
 
-        let recorder = NamedMpkBytesRecorder::<FullPrecisionSettings>::default();
-        let model_bytes = recorder
-            .record(self.model_record, ())
+        let model_bytes = self
+            .model_record
+            .into_bytes()
             .map_err(|e| format!("Failed to record model: {e}"))?;
 
         sink.put_bytes("model.mpk", &model_bytes)
@@ -205,9 +206,7 @@ impl BundleDecode for MnistModelArtifact {
             .read_to_end(&mut model_bytes)
             .map_err(|e| format!("Failed to read model: {e}"))?;
 
-        let recorder = NamedMpkBytesRecorder::<FullPrecisionSettings>::default();
-        let (model_record, ()) = recorder
-            .load(model_bytes, &Device::default())
+        let model_record = ModuleRecord::from_bytes(Bytes::from_bytes_vec(model_bytes))
             .map_err(|e| format!("Failed to read model: {e}"))?;
 
         Ok(MnistModelArtifact {

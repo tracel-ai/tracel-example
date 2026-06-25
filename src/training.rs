@@ -32,8 +32,10 @@ use burn::{
     },
 };
 use tracel::experiment::{
-    ArtifactKind, ExperimentRun, integration::training::ExperimentTrainingExt,
+    ArtifactKind, ExperimentId, ExperimentRun, integration::training::ExperimentTrainingExt,
 };
+
+const A_EPOCH_CHECKPOINT: usize = 1;
 
 static ARTIFACT_DIR: &str = "/tmp/burn-example-mnist";
 #[derive(Config, Debug)]
@@ -51,6 +53,16 @@ pub struct MnistTrainingConfig {
     pub seed: u64,
 
     pub optimizer: AdamWConfig,
+
+    /// When set, resume training from a previous experiment's checkpoints.
+    resume_from: Option<u32>,
+}
+
+impl MnistTrainingConfig {
+    pub fn resume_from(mut self, experiment_id: u32) -> Self {
+        self.resume_from = Some(experiment_id);
+        self
+    }
 }
 
 /// Implement default training configuration. The burn-central-cli will be able to override those
@@ -161,9 +173,15 @@ fn train(
         .num_epochs(config.num_epochs)
         .summary();
 
-    // Configure the training integrations from burn-central
+    let (model_ckpt, optim_ckpt, scheduler_ckpt) = match config.resume_from {
+        Some(experiment_num) => {
+            training = training.checkpoint(A_EPOCH_CHECKPOINT);
+            experiment.checkpointers_from(ExperimentId::from(experiment_num))
+        }
+        None => experiment.checkpointers(),
+    };
     training = training
-        .with_file_checkpointer(experiment.checkpoint_recorder())
+        .with_custom_checkpointers(model_ckpt, optim_ckpt, scheduler_ckpt)
         .with_metric_logger(experiment.metric_logger())
         .with_interrupter(experiment.interrupter());
 
