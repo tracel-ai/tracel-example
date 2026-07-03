@@ -21,7 +21,7 @@ This repository shows how to adapt the standard Burn MNIST example into a Tracel
 `Context::cloud()` needs Tracel credentials. Either set `TRACEL_API_KEY` in your environment, or authenticate once with:
 
 ```bash
-burn login
+tracel login
 ```
 
 The project's namespace and name come from [`tracel.toml`](tracel.toml). By default the example uses the `FlexDevice` backend; optional backends can be enabled with Cargo features.
